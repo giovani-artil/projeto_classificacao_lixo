@@ -1,0 +1,1 @@
+# projeto_classificacao_lixo
