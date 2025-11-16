@@ -1,67 +1,58 @@
-# Classificação de Resíduos com CNN e Data Augmentation
+# Projeto 2: Classificação de Lixo para Reciclagem
 
-Este repositório apresenta um experimento desenvolvido na disciplina **Fundamentos de Inteligência Artificial (FIA)**, cujo objetivo é utilizar **Redes Neurais Convolucionais (CNNs)** para classificar imagens de resíduos em seis categorias:
+## 1. Problema e Objetivo
+A **destinação correta de resíduos** é um desafio **global**, especialmente diante do aumento do consumo e dos impactos ambientais associados. Diante desse contexto — alinhado às discussões da COP 30 e às metas de sustentabilidade — **soluções automatizadas se tornam essenciais**.
 
-`cardboard`, `glass`, `metal`, `paper`, `plastic`, `trash`.
+Este projeto busca desenvolver e avaliar um **classificador de imagens multiclasse** utilizando **Redes Neurais Convolucionais (CNNs)** capaz de identificar automaticamente materiais recicláveis e rejeitos, classificando imagens em seis categorias: **cardboard, glass, metal, paper, plastic e trash**.
 
-Além do treinamento do modelo, o estudo analisa o **impacto do data augmentation** na capacidade de generalização, avaliando métricas, matriz de confusão e curvas de aprendizado.
-
----
-
-## 1. Estrutura do Repositório
-
-| Arquivo / Pasta | Descrição |
-| --------------- | --------- |
-| **Codigo** | Pasta com o notebook com carregamento do dataset, construção do modelo, treinamento e análises e imagens dos resultados. |
-| **dataset** | Pasta com o dataset utilizado para a atividade. |
-| **README.md** | Documento técnico com contexto, metodologia, resultados e conclusões. |
-
----
-
-## 2. Contexto e Motivação
-
-A triagem eficiente de resíduos é essencial para melhorar processos de reciclagem e reduzir a contaminação de materiais. Neste projeto, a classificação é tratada como um problema de **visão computacional multiclasse**, integrando conceitos de aprendizado profundo para avaliar como o **data augmentation** influencia o desempenho em um dataset relativamente pequeno e desbalanceado.
-
----
-
-## 3. Objetivos
-
-- Treinar uma CNN para classificar imagens de resíduos em 6 categorias.
-- Avaliar diferentes níveis de data augmentation.
-- Analisar desempenho usando:
+Além da construção do modelo, o experimento:
+- Avalia o impacto de diferentes níveis de data augmentation.
+- Analisa o desempenho usando:
   - acurácia,
   - matriz de confusão,
   - relatório por classe,
   - curvas de treino e validação.
-- Discutir limitações e possíveis melhorias.
+---
+
+## 2. Sobre o Repositório
+
+| Arquivo | Descrição |
+| --------------- | --------- |
+| **Codigo** | Pasta com o notebook com carregamento do dataset, construção do modelo, treinamento, análises e imagens dos resultados. |
+| **dataset** | Pasta com o dataset utilizado para a atividade. |
+| **README.md** | Documento técnico com contexto, processo, resultados e conclusões. |
+
+### Fontes usadas como base:
+
+- O dataset TrashNet, disponível no GitHub (https://github.com/garythung/trashnet) e espelhado no Kaggle e Hugging Face (https://www.kaggle.com/datasets/asdasdasasdas/garbage-classification).
+- Conteúdo: Consiste em 2.527 imagens, divididas em 6 pastas, redimensionadas
+(512x384 pixels) divididas em seis categorias. 
+
+Vale mencionar que:
+- O dataset é relativamente **pequeno e um pouco desbalanceado**, visto que a classe trash possui apenas 137 imagens, o que torna o
+aumento de dados (**data augmentation**) uma **técnica necessária**.
+- O notebook base utiliza python com TensorFlow / Keras.
 
 ---
 
-## 4. Dataset
+## 3. Processo do Projeto
 
-O dataset utilizado é derivado do **TrashNet**, disponível no Kaggle, contendo seis classes:
+### 3.1. Carregamento e Preparação dos Dados: 
 
-`cardboard`, `glass`, `metal`, `paper`, `plastic`, `trash`.
+As imagens são carregadas diretamente do diretório utilizando **ImageDataGenerator**, com rescale=1./255 e divisão entre treino e validação. **Quatro configurações** de data augmentation são exploradas:
 
-### Características principais:
-- Alguns milhares de imagens.
-- Desbalanceamento relevante (especialmente para `trash`).
-- Imagens RGB redimensionadas para **224×224** pixels.
-- Divisão treino/validação via `validation_split` (~85%/15%).
+  - Baseline (sem augmentation)
+  - Leve
+  - Moderado
+  - Agressivo
 
-O notebook contém a contagem por classe e exemplos visuais.
-
----
-
-## 5. Metodologia
-
-### 5.1 Pré-processamento e Data Augmentation
-
-Quatro configurações distintas de *data augmentation* foram avaliadas, variando desde nenhuma transformação até alterações agressivas. Todas utilizaram `rescale=1./255` e `validation_split` fixos. A validação sempre foi realizada **sem nenhum tipo de augmentation**.
+Cada configuração aplica transformações distintas para avaliar o impacto na capacidade de generalização do modelo, enquanto a validação permanece sem augmentation.
 
 ---
 
-### 1. Sem Augmentation (baseline)
+### 3.2 Configurações de Augmentation:
+
+#### 1. Sem Augmentation (baseline)
 
 ```python
 train_img_generator = ImageDataGenerator(
@@ -69,7 +60,7 @@ train_img_generator = ImageDataGenerator(
     validation_split=validation_split
 )
 ```
-### 2. Augmentation Leve
+#### 2. Augmentation Leve
 
 ```python
 train_img_generator = ImageDataGenerator(
@@ -83,7 +74,7 @@ train_img_generator = ImageDataGenerator(
 )
 ```
 
-### 3. Augmentation Moderado
+#### 3. Augmentation Moderado
 
 ```python
 train_img_generator = ImageDataGenerator(
@@ -100,7 +91,7 @@ train_img_generator = ImageDataGenerator(
 )
 ```
 
-### 4. Augmentation Agressivo
+#### 4. Augmentation Agressivo
 
 ```python
 train_img_generator = ImageDataGenerator(
@@ -118,57 +109,34 @@ train_img_generator = ImageDataGenerator(
 )
 ```
 
+---
+
+## 4. CNN, Treinamento e Avaliação
+
+### 4.1. Construção da CNN
+O modelo é definido com uma arquitetura Sequential composta por:
+- Uma arquitetura CNN padrão (blocos de Conv2D -> ReLU -> MaxPooling2D).
+- Um classificador (Flatten -> Dense -> Dropout -> Dense).
+
+### 4.2. Treinamento e Avaliação
+O modelo foi treinado utilizando os geradores de dados configurados e avaliado por métricas quantitativas e qualitativas, incluindo **acurácia categórica**, **curvas de aprendizado** e **matriz de confusão**, para visualizar quais classe são mais frequentemente confundidas entre si. 
+Vale mencionar que:
+- O teste foi realizado através do **Google Colab**.
+- Utilizou-se a **GPU** como ambiente de execução.
+- Configuramos o total de **epochs em 400** com **early stopping** (ele para antes para evitar overfitting).
+
+--- 
+
+## 5. Resultados
 Os resultados apresentados correspondem ao cenário 4 — Augmentation Agressivo — por ter sido a configuração que alcançou o melhor desempenho geral no experimento.
 
----
-
-### 5.2 Arquitetura da CNN
-
-A arquitetura utilizada segue uma CNN compacta, porém robusta:
-
-- **Entrada:** `224×224×3`
-- **Blocos convolucionais:**
-  - Conv2D(64) + Dropout(0.2) + MaxPool
-  - Conv2D(128) + Dropout(0.2) + MaxPool
-  - Conv2D(128) + Dropout(0.4) + MaxPool
-- **Classificador:**
-  - Flatten
-  - Dense(128) + Dropout(0.5)
-  - Dense(64)
-  - Dense(6, softmax)
-
-### Hiperparâmetros:
-
-- Otimizador: `Adam (lr = 1e-4)`
-- Loss: `CategoricalCrossentropy`
-- Métrica: `CategoricalAccuracy`
-
-### Callbacks:
-- `EarlyStopping(patience=10, restore_best_weights=True)`
-- `ModelCheckpoint` para salvar o melhor modelo.
-
----
-
-### 5.3 Estratégia de Experimentos
-
-- Treinamento em GPU via Google Colab.
-- Máximo de 60–100 épocas, com early stopping.
-- Avaliação final baseada em:
-  - acurácia,
-  - matriz de confusão,
-  - desempenho por classe,
-  - análise das curvas de treino/validação.
-
----
-
-## 6. Resultados
-
-### 6.1 Acurácia Geral
+### 5.1 Acurácia Geral
 - **Treino:** ~70%
 - **Validação:** ~70.5%
+
 ---
 
-### 6.2 Desempenho por Classe (recall aproximado)
+### 5.2 Desempenho por Classe (recall aproximado gerado)
 
 | Classe     | Recall |
 |-----------|--------|
@@ -183,7 +151,7 @@ A classe `trash` foi a mais difícil devido ao baixo número de exemplos e alto 
 
 ---
 
-### 6.3 Curvas de Treino e Validação
+### 5.3 Curvas de Treino e Validação
 
 ![Curva de Acurácia](AccuracyPlot.jpeg)
 
@@ -196,7 +164,7 @@ As curvas indicam:
 
 ---
 
-### 6.4 Matriz de Confusão
+### 5.4 Matriz de Confusão
 
 ![Matriz de Confusão](MatrizConfusao.jpeg)
 
@@ -210,7 +178,7 @@ Apesar da acurácia global maior, a matriz deixa claro que o modelo não aprende
 
 ---
 
-## 7. Impacto do Data Augmentation
+## 6. Impacto do Data Augmentation
 
 Foram analisadas quatro configurações, mas aqui destacamos a comparação mais relevante:
 
@@ -232,34 +200,27 @@ Foram analisadas quatro configurações, mas aqui destacamos a comparação mais
 - Forte indício de que o augmentation exagerado cria variações irreais, confundindo padrões importantes
 
 **Conclusão:**  
-O augmentation agressivo elevou a acurácia total, mas não melhorou a capacidade do modelo em distinguir as classes individualmente. No contexto desse dataset, a configuração agressiva gera diversidade suficiente para aumentar a acurácia global, mas ao custo de piorar a precisão por classe. Assim, o augmentation moderado continua sendo o mais balanceado para generalização real.
+O augmentation agressivo elevou a acurácia total, mas não melhorou a capacidade do modelo em distinguir as classes individualmente. No contexto desse dataset, a configuração agressiva **gera diversidade** suficiente para aumentar a acurácia global, mas ao custo de **piorar a precisão por classe**. Assim, o augmentation moderado continua sendo o mais balanceado para generalização real.
 
 ---
 
-## 8. Limitações
+## 7. Limitações
 
-- Dataset pequeno e desbalanceado, o que prejudica o aprendizado de classes menos representadas.
-- Similaridade visual alta entre algumas categorias, como plastic, glass e cardboard, levando a confusões frequentes mesmo com augmentation.
-- Uso de uma arquitetura relativamente simples, que limita a capacidade do modelo de extrair padrões mais profundos — especialmente perceptível nas métricas por classe.
-- Classe trash com poucos exemplos e grande variabilidade interna, resultando em baixo recall mesmo nas melhores configurações.
+- Dataset **pequeno e desbalanceado**, o que prejudica o aprendizado de classes menos representadas.
+- **Similaridade visual alta** entre algumas categorias, como plastic, glass e cardboard, levando a confusões frequentes mesmo com augmentation.
+- Uso de uma arquitetura **relativamente simples**, que limita a capacidade do modelo de extrair padrões mais profundos — especialmente perceptível nas métricas por classe.
+- Classe trash com **poucos exemplos** e grande variabilidade interna, resultando em baixo recall mesmo nas melhores configurações.
 - Augmentation agressivo aumenta a acurácia geral, mas não resolve a baixa precisão e recall das categorias, já que parte das transformações pode distorcer demais os padrões reais das imagens.
 - Ausência de técnicas adicionais de regularização (como class weighting ou focal loss), que poderiam ajudar no desbalanceamento entre classes.
 
 ---
 
-## 9. Tecnologias Utilizadas
+## 8. Integrantes:
 
-- Python  
-- TensorFlow / Keras  
-- NumPy, Pandas  
-- Matplotlib, Seaborn  
-- Jupyter Notebook  
-- Google Colab (GPU)
-
----
-
-## 10. Integrantes
-
-
+- Giovani Artil Oliveira de Carvalho (giovaniartil@icomp.ufam.edu.br)
+- Jorge Samuel Silva Coelho (samcoelho@icomp.ufam.edu.br)
+- Renata Modesto Fernandes (renata.modesto@icomp.ufam.edu.br)
+- Sofia Pinho Icavino Moura (sofiaicavino@icomp.ufam.edu.br)
+- Vitória Luz Edwards (vitoria.edwards@icomp.ufam.edu.br)
 
 ---
