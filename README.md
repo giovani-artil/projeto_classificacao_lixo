@@ -39,11 +39,12 @@ aumento de dados (**data augmentation**) uma **técnica necessária**.
 
 ### 3.1. Carregamento e Preparação dos Dados: 
 
-As imagens são carregadas diretamente do diretório utilizando **ImageDataGenerator**, com rescale=1./255 e divisão entre treino e validação. **Quatro configurações** de data augmentation são exploradas:
+As imagens são carregadas diretamente do diretório utilizando **ImageDataGenerator**, com rescale=1./255 e divisão entre treino e validação. **Cinco configurações** de data augmentation são exploradas:
 
   - Baseline (sem augmentation)
   - Leve
   - Moderado
+  - Levemente Agressivo (o padrão do notebook usado)
   - Agressivo
 
 Cada configuração aplica transformações distintas para avaliar o impacto na capacidade de generalização do modelo, enquanto a validação permanece sem augmentation.
@@ -90,8 +91,23 @@ train_img_generator = ImageDataGenerator(
     fill_mode='nearest'
 )
 ```
+#### 4. Augmentation Levemente Agressivo
 
-#### 4. Augmentation Agressivo
+```python
+train_img_generator = ImageDataGenerator(rescale=1./255,
+                                         validation_split=validation_split,
+                                         horizontal_flip=True,
+                                         vertical_flip=True,
+                                         zoom_range = 0.5,
+                                         width_shift_range = 0.3,
+                                         height_shift_range = 0.3,
+                                         rotation_range=50,
+                                         shear_range = 0.3,
+                                         fill_mode='nearest'
+                                        )
+
+```
+#### 5. Augmentation Agressivo
 
 ```python
 train_img_generator = ImageDataGenerator(
@@ -128,9 +144,13 @@ Vale mencionar que:
 --- 
 
 ## 5. Resultados
-Os resultados apresentados correspondem ao cenário 4 — Augmentation Agressivo — por ter sido a configuração que alcançou o melhor desempenho geral no experimento.
+Os resultados apresentados correspondem ao cenário 4 — Augmentation Agressivo — e ao cenário 5 - Levemente Agressivo - por terem sido as configurações que alcançaram o melhor desempenho geral no experimento. 
 
 ### 5.1 Acurácia Geral
+
+Cenário 4:
+
+Cenário 5:
 - **Treino:** ~70%
 - **Validação:** ~70.5%
 
@@ -138,6 +158,18 @@ Os resultados apresentados correspondem ao cenário 4 — Augmentation Agressivo
 
 ### 5.2 Desempenho por Classe (recall aproximado gerado)
 
+Cenário 4:
+
+| Classe     | Recall |
+|-----------|--------|
+| paper     | ~21%   |
+| metal     | ~23%   |
+| cardboard | ~13%   |
+| glass     | ~15%   |
+| plastic   | ~14%   |
+| trash     | ~5%    |
+
+Cenário 5:
 | Classe     | Recall |
 |-----------|--------|
 | paper     | ~21%   |
@@ -153,9 +185,19 @@ A classe `trash` foi a mais difícil devido ao baixo número de exemplos e alto 
 
 ### 5.3 Curvas de Treino e Validação
 
+Cenário 4:
+
 ![Curva de Acurácia](AccuracyPlot.jpeg)
 
-As curvas indicam:
+
+Análise: as curvas indicam
+
+Cenário 5:
+
+![Curva de Acurácia](AccuracyPlot.jpeg)
+
+
+Análise: as curvas indicam
 
 - Aumento consistente na acurácia ao longo das épocas.
 - Menor tendência ao overfitting, porque o modelo foi exposto a variações fortes.
@@ -166,9 +208,14 @@ As curvas indicam:
 
 ### 5.4 Matriz de Confusão
 
+Cenário 4:
+
+Análise: a matriz mostra
+
+Cenário 5:
 ![Matriz de Confusão](MatrizConfusao.jpeg)
 
-A matriz mostra:
+Análise: a matriz mostra
 
 - Melhores desempenhos relativos para metal e paper.
 - Confusões frequentes entre plastic, glass e cardboard.
@@ -192,7 +239,7 @@ Foram analisadas quatro configurações, mas aqui destacamos a comparação mais
 -	Melhor equilíbrio entre treino e validação
 -	Métricas por classe ainda modestas, mas mais estáveis
 
-### **3. Augmentation agressivo (atual)**
+### **3. Augmentation levemente agressivo e agressivo (atual)**
 - Acurácia de teste: ~70.5% (melhor resultado global)
 - Loss mais baixo
 - Porém, precisão e recall por classe continuam muito baixos
@@ -200,7 +247,7 @@ Foram analisadas quatro configurações, mas aqui destacamos a comparação mais
 - Forte indício de que o augmentation exagerado cria variações irreais, confundindo padrões importantes
 
 **Conclusão:**  
-O augmentation agressivo elevou a acurácia total, mas não melhorou a capacidade do modelo em distinguir as classes individualmente. No contexto desse dataset, a configuração agressiva **gera diversidade** suficiente para aumentar a acurácia global, mas ao custo de **piorar a precisão por classe**. Assim, o augmentation moderado continua sendo o mais balanceado para generalização real.
+O augmentation levemente agressivo/agressivo elevou a acurácia total, mas não melhorou a capacidade do modelo em distinguir as classes individualmente. No contexto desse dataset, a configuração agressiva **gera diversidade** suficiente para aumentar a acurácia global, mas ao custo de **piorar a precisão por classe**. Assim, o augmentation moderado continua sendo o mais balanceado para generalização real.
 
 ---
 
