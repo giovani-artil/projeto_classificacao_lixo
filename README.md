@@ -18,8 +18,9 @@ Além da construção do modelo, o experimento:
 
 | Arquivo | Descrição |
 | --------------- | --------- |
-| **Codigo** | Pasta com o notebook com carregamento do dataset, construção do modelo, treinamento, análises e imagens dos resultados. |
+| **project** | Pasta com o notebook com carregamento do dataset, construção do modelo, treinamento, análises e imagens dos resultados. |
 | **dataset** | Pasta com o dataset utilizado para a atividade. |
+| **images** | Pasta com as imagens dos resultados para o Readme. |
 | **README.md** | Documento técnico com contexto, processo, resultados e conclusões. |
 
 ### Fontes usadas como base:
@@ -94,17 +95,18 @@ train_img_generator = ImageDataGenerator(
 #### 4. Augmentation Levemente Agressivo
 
 ```python
-train_img_generator = ImageDataGenerator(rescale=1./255,
-                                         validation_split=validation_split,
-                                         horizontal_flip=True,
-                                         vertical_flip=True,
-                                         zoom_range = 0.5,
-                                         width_shift_range = 0.3,
-                                         height_shift_range = 0.3,
-                                         rotation_range=50,
-                                         shear_range = 0.3,
-                                         fill_mode='nearest'
-                                        )
+train_img_generator = ImageDataGenerator(
+    rescale=1./255,
+    validation_split=validation_split,
+    horizontal_flip=True,
+    vertical_flip=True,
+    zoom_range = 0.5,
+    width_shift_range = 0.3,
+    height_shift_range = 0.3,
+    rotation_range=50,
+    shear_range = 0.3,
+    fill_mode='nearest'
+)
 
 ```
 #### 5. Augmentation Agressivo
@@ -149,6 +151,8 @@ Os resultados apresentados correspondem ao cenário 4 — Augmentation Agressivo
 ### 5.1 Acurácia Geral
 
 Cenário 4:
+- **Treino:** ~72%
+- **Validação:** ~73%
 
 Cenário 5:
 - **Treino:** ~70%
@@ -187,14 +191,19 @@ A classe `trash` foi a mais difícil devido ao baixo número de exemplos e alto 
 
 Cenário 4:
 
-![Curva de Acurácia](AccuracyPlot.jpeg)
+![Curva de Acurácia](images/accuracy_plot_cenary4.jpeg)
 
 
 Análise: as curvas indicam
 
+- Acurácia crescente e aprendizado estável ao longo das épocas.
+- Baixa diferença entre treino e teste, indicando pouca tendência ao overfitting.
+- Oscilações na acurácia de teste, sugerindo sensibilidade a classes difíceis ou dataset limitado.
+- Estabilização em torno de ~70%, indicando limite da arquitetura atual sem otimizações adicionais.
+
 Cenário 5:
 
-![Curva de Acurácia](AccuracyPlot.jpeg)
+![Curva de Acurácia](images/accuracy_plot_cenary5.jpeg)
 
 
 Análise: as curvas indicam
@@ -210,10 +219,15 @@ Análise: as curvas indicam
 
 Cenário 4:
 
+![Matriz de Confusão](images/matriz_confusao_cenary4.jpeg)
+
 Análise: a matriz mostra
 
+- Acurácia global de 17% reforça que o modelo não consegue separar bem as categorias, indicando necessidade de arquitetura mais robusta, mais dados ou melhor balanceamento das classes.
+
 Cenário 5:
-![Matriz de Confusão](MatrizConfusao.jpeg)
+
+![Matriz de Confusão](images/matriz_confusao_cenary5.jpeg)
 
 Análise: a matriz mostra
 
@@ -240,7 +254,7 @@ Foram analisadas quatro configurações, mas aqui destacamos a comparação mais
 -	Métricas por classe ainda modestas, mas mais estáveis
 
 ### **3. Augmentation levemente agressivo e agressivo (atual)**
-- Acurácia de teste: ~70.5% (melhor resultado global)
+- Acurácia de teste: ~73% (melhor resultado global)
 - Loss mais baixo
 - Porém, precisão e recall por classe continuam muito baixos
 - Modelo acerta “no geral”, mas erra muito dentro de cada categoria específica
