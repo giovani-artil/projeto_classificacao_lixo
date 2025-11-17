@@ -278,6 +278,50 @@ O augmentation levemente agressivo/agressivo elevou a acurácia total, mas não 
 
 ## 8. Integrantes:
 
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/giovani-artil" target="_blank">
+        <img src="https://github.com/giovani-artil.png" width="150px" style="border-radius: 50%;" alt="Giovani Carvalho"/><br />
+        <span style="font-weight: bold; font-size: 16px; color: #333;">Giovani Carvalho</span>
+      </a><br />
+      <span style="font-size: 14px; color: #777;">Developer</span>
+    </td>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/samuelcoelhoam" target="_blank">
+        <img src="https://github.com/samuelcoelhoam.png" width="150px" style="border-radius: 50%;" alt="Jorge Coelho"/><br />
+        <span style="font-weight: bold; font-size: 16px; color: #333;">Jorge Coelho</span>
+      </a><br />
+      <span style="font-size: 14px; color: #777;">Developer</span>
+    </td>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/rehOtsedom12" target="_blank">
+        <img src="https://github.com/rehOtsedom12.png" width="150px" style="border-radius: 50%;" alt="Renata Fernandes"/><br />
+        <span style="font-weight: bold; font-size: 16px; color: #333;">Renata Fernandes</span>
+      </a><br />
+      <span style="font-size: 14px; color: #777;">Developer</span>
+    </td>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/sofiaIcavino" target="_blank">
+        <img src="https://github.com/sofiaIcavino.png" width="150px" style="border-radius: 50%;" alt="Sofia Moura"/><br />
+        <span style="font-weight: bold; font-size: 16px; color: #333;">Sofia Moura</span>
+      </a><br />
+      <span style="font-size: 14px; color: #777;">Developer</span>
+    </td>
+    <td align="center" style="padding: 10px;">
+      <a href="https://github.com/Tory18" target="_blank">
+        <img src="https://github.com/Tory18.png" width="150px" style="border-radius: 50%;" alt="Vitória Edward"/><br />
+        <span style="font-weight: bold; font-size: 16px; color: #333;">Vitória Edwards</span>
+      </a><br />
+      <span style="font-size: 14px; color: #777;">Developer</span>
+    </td>
+  </tr>
+</table>
+</div>
+
+
 - Giovani Artil Oliveira de Carvalho (giovaniartil@icomp.ufam.edu.br)
 - Jorge Samuel Silva Coelho (samcoelho@icomp.ufam.edu.br)
 - Renata Modesto Fernandes (renata.modesto@icomp.ufam.edu.br)
